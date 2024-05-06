@@ -1,0 +1,20 @@
+services:
+  infinispan:
+    image: quay.io/infinispan/server:latest
+    container_name: infinispan
+    environment:
+      - 'USER=admin'
+      - 'PASS=password'
+    ports:
+      - '11222:11222'
+    networks:
+      - db-mem-network
+    healthcheck:
+      test: [ "CMD", "curl", -f "http://localhost:11222" ]
+      interval: 1s
+      timeout: 1s
+      retries: 3
+
+networks:
+  db-mem-network:
+    external: true

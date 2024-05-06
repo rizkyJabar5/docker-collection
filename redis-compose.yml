@@ -1,0 +1,21 @@
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    command: redis-server --save 20 1 --loglevel warning --requirepass password
+    ports:
+      - '6379:6379'
+    restart: always
+    networks:
+      - db-mem-network
+    volumes:
+      - '.cache/redis:/data'
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 1s
+      timeout: 1s
+      retries: 3
+
+networks:
+  db-mem-network:
+    external: true

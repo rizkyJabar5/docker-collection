@@ -1,0 +1,20 @@
+version: 1.0.0
+
+services:
+  postgresql:
+    container_name: postgres
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_USER=myuser'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_DB=mydatabase'
+    ports:
+      - '37460:5432'
+    networks:
+      - rrk.local
+volumes: 
+  db:
+    driver: local
+networks:
+  rrk.local: 
+    external: true 
