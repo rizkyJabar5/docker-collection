@@ -4,10 +4,14 @@ services:
     image: oracle/database:19.3.0-ee
     container_name: oracle19c
     environment:
+    - ORACLE_SID=orcdc
     - ORACLE_PDB=orcl
     - ORACLE_PWD=password
     - INIT_SGA_SIZE=3000
     - INIT_PGA_SIZE=1000
+    - ENABLE_ARCHIVELOG=true
+    - ENABLE_FORCE_LOGGING=true
+    shm_size: '3g'
     ports:
     - 1521:1521
     - 5500:5500
