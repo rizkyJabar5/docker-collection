@@ -2,7 +2,7 @@
 services:
   oracle-db:
     image: oracle/database:19.3.0-ee
-    container_name: oracle19c
+    container_name: oracle-cdc
     environment:
     - ORACLE_SID=orcdc
     - ORACLE_PDB=orcl
