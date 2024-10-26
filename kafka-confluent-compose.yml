@@ -1,4 +1,5 @@
-version: "3.9"
+version: "3.7"
+
 services:
   zookeeper:
     container_name: zookeeper
