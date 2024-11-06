@@ -16,4 +16,4 @@ services:
     - 11521:1521
     - 55500:5500
     volumes:
-    - /opt/oracle/oradata
+    - /docker/oracle:/opt/oracle/oradata
