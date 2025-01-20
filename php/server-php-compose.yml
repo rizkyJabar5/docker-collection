@@ -1,0 +1,13 @@
+services:
+  webserver:
+    image: nginx:latest
+    ports:
+      - "9999:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./docker/app:/app
+
+  php:
+    image: php
+    volumes:
+      - /docker/app:/app

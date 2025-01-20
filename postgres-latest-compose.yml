@@ -1,0 +1,33 @@
+services:
+  postgresql:
+    container_name: postgres
+    image: 'postgres:${PG_LATEST_VERSION}'
+    environment:
+      - 'POSTGRES_USER=${PG_USER}'
+      - 'POSTGRES_PASSWORD=${PG_PASSWORD}'
+      - 'POSTGRES_DB=${PG_DB}'
+    ports:
+      - '5432:5432'
+    networks:
+      - db.net
+    volumes:
+      - 'postgres-bin:/usr/lib/postgresql/${PG_LATEST_VERSION}/bin'
+      - 'postgres-data:/var/lib/postgresql/${PG_LATEST_VERSION}/data'
+    healthcheck:
+      test: ["CMD", "sh -c 'pg_isready -U ${PG_USER} -d ${PG_DB}'"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres-bin:
+  postgres-data:
+
+networks:
+  db.net:
+    name: db-network
+    external: true
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
