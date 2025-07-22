@@ -7,7 +7,7 @@ services:
       - '6379:6379'
     restart: always
     networks:
-      - db-mem-network
+      - the-db-collection
     volumes:
       - '.cache/redis:/data'
     healthcheck:
@@ -17,5 +17,5 @@ services:
       retries: 3
 
 networks:
-  db-mem-network:
+  the-db-collection:
     external: true
