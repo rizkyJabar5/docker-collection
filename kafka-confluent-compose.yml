@@ -62,19 +62,24 @@ services:
     image: provectuslabs/kafka-ui:latest
     ports:
       - 8000:8000 # Changed to avoid port clash with akhq
-    depends_on:
-      - kafka
-      - connect
+    # depends_on:
+    #   - kafka
+    #   - connect
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       # KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 192.168.244.109:9092 # 'kafka:29092'
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
-      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: localhost:9092
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: localhost:8081
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: connect
-      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://connect:8083
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://localhost:8003
       DYNAMIC_CONFIG_ENABLED: 'true'
+    networks:
+      - event-network
 
 networks:
+  event-network:
+    name: confluent-event_event-network
+    external: true
   default:
     driver: bridge
 
