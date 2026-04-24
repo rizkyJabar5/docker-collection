@@ -1,6 +1,6 @@
 services:
   postgresql:
-    container_name: postgres
+    container_name: postgres-db
     image: 'postgres:${PG_LATEST_VERSION}'
     environment:
       - 'POSTGRES_USER=${PG_USER}'

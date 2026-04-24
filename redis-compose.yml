@@ -7,9 +7,9 @@ services:
       - '6379:6379'
     restart: always
     networks:
-      - db-mem-network
+      - db.net
     volumes:
-      - '.cache/redis:/data'
+      - '.cache/redis:/data:Z'
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
       interval: 1s
@@ -17,5 +17,9 @@ services:
       retries: 3
 
 networks:
-  db-mem-network:
+  db.net:
+    name: db-network
     external: true
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"

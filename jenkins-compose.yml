@@ -1,0 +1,41 @@
+services:
+  jenkins:
+    image: docker.io/jenkins/jenkins:lts
+    container_name: jenkins
+    privileged: true
+    user: root
+    ports:
+      - 8181:8080
+      - 50000:50000
+    volumes:
+      # Added :Z to handle SELinux context labeling (critical for RHEL/Fedora/CentOS)
+      - ${JENKINS_HOME_PATH}:/var/jenkins_home:Z
+      
+      # 1. Mount the Podman socket to the Docker socket path expected by Jenkins.
+      # NOTE: This path assumes ROOTLESS podman for UID 1000. 
+      # If running rootful, change host path to: /run/podman/podman.sock
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:Z
+      
+      # 2. Map the Podman binary to the Docker binary
+      - /usr/bin/podman:/usr/bin/docker:ro
+      
+      # OMITTED: /usr/libexec/docker. Podman is a standalone binary and does 
+      # not use the docker libexec components in the same way.
+    networks:
+      - devops_network
+
+  agent:
+    image: docker.io/jenkins/ssh-agent:jdk21
+    container_name: jenkins_sandbox_agent
+    privileged: true
+    user: root
+    expose:
+      - 22
+    environment:
+      - JENKINS_AGENT_SSH_PUBKEY=${JENKINS_AGENT_SSH_PUBLIC_KEY}
+    networks:
+      - devops_network
+
+networks:
+  devops_network:
+    driver: bridge
