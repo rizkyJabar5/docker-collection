@@ -7,7 +7,7 @@ services:
       - '6379:6379'
     restart: always
     networks:
-      - db.net
+      - the-db-collection
     volumes:
       - '.cache/redis:/data:Z'
     healthcheck:
@@ -17,8 +17,7 @@ services:
       retries: 3
 
 networks:
-  db.net:
-    name: db-network
+  the-db-collection:
     external: true
     driver: bridge
     driver_opts:

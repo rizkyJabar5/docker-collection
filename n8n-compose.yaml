@@ -1,0 +1,22 @@
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n-local
+    ports:
+      - 5678:5678
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_DATABASE=${PG_DB}
+      - DB_POSTGRESDB_HOST=host.docker.internal
+      - DB_POSTGRESDB_PORT=${PG_PORT}
+      - DB_POSTGRESDB_USER=${PG_USER}
+      - DB_POSTGRESDB_PASSWORD=${PG_PASSWORD}
+      - DB_POSTGRESDB_SCHEMA=pgdb
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+    volumes: 
+      - n8n_data:/home/node/.n8n
+    restart: unless-stopped
+
+volumes:
+  n8n_data:

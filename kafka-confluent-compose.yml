@@ -42,25 +42,12 @@ services:
     depends_on:
       - kafka
 
-  postgres:
-    container_name: postgres
-    image: postgres
-    ports:
-      - 5433:5432
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    command:
-      - "postgres"
-      - "-c"
-      - "wal_level=logical"
-
   schema-registry:
     image: confluentinc/cp-schema-registry
     container_name: schema-registry
     hostname: schema-registry
     ports:
-      - "8081:8081"
+      - "8001:8001"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092' #192.168.244.109:9092
@@ -72,19 +59,25 @@ services:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
-      - 8080:8080 # Changed to avoid port clash with akhq
-    depends_on:
-      - kafka
-      - connect
+      - 8000:8000 # Changed to avoid port clash with akhq
+    # depends_on:
+    #   - kafka
+    #   - connect
     environment:
       KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092 #192.168.244.109:9092
+      # KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 192.168.244.109:9092 # 'kafka:29092'
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
       KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: connect
-      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://connect:8083
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://localhost:8003
       DYNAMIC_CONFIG_ENABLED: 'true'
+    networks:
+      - event-network
 
 networks:
+  event-network:
+    name: confluent-event_event-network
+    external: true
   default:
     driver: bridge
 
